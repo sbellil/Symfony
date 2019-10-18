@@ -1,0 +1,10 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+affichage-formulaire:
+    path:       /fiche-contact
+    controller: App\Controller\ContactController::new
+
+succes-formulaire:
+    path:       /success
+    controller: App\Controller\ContactController::success
