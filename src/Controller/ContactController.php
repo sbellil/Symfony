@@ -24,41 +24,23 @@ class ContactController extends abstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $form->getData();
             $contact = $form->getData();
+
+            //enregistrer les informations dans la base de données 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($contact);
             $entityManager->flush();
 
             // récupérer les données
-            $nom = $form->get('nom')->getData();
-            $prenom = $form->get('prenom')->getData();
-            $msg = $form->get('message')->getData();
-            $mail = $form->get('mail')->getData();
+            $departement = $contact->getDepartement();
+            $email_responsable = $departement->getEmailResponsable();
+            $nom = $contact->getNom();
+            $prenom = $contact ->getPrenom();
+            $msg = $contact ->getMessage();
+            $mail = $contact ->getMail();
 
-              //se connecter à la base de données
-            try {
-                $bdd = new PDO('mysql:host=localhost;dbname=symfony;charset=utf8', 'root', '');
-            }
-            catch (Exception $e)
-            {
-                die('Erreur : '.$e->getMessage());
-            }
+            //envoyer un le mail
+            $notification->sendEmail($email_responsable,$msg,$nom,$prenom,$mail);
 
-            $responsecontact = $bdd->query('SELECT * From contact ');
-            $reponsedepart = $bdd->query('SELECT * From departement');
-            while($donnees = $reponsedepart->fetch())
-            {
-                while ($data=$responsecontact->fetch())
-                {
-                    if ($donnees['id']==$data['departement_id'])
-                    {
-                        //envoi du mail
-                        $notification->sendEmail($donnees['email_responsable'],$msg,$nom,$prenom,$mail);
-
-                    }
-
-                }
-
-            }
 
             return $this->redirectToRoute('succes-formulaire');
         }
