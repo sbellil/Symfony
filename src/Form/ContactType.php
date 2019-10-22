@@ -26,7 +26,6 @@ class ContactType extends AbstractType
                 'class' =>Departement::class,
                 'choice_label'=>'nom_departement',
                 'placeholder'=>'choisir un département'])
-            ->add('envoyer',SubmitType::class)
         ;
     }
 
